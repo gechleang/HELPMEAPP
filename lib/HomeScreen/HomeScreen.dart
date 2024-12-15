@@ -13,25 +13,25 @@ class HomeScreen extends StatelessWidget {
   final List<Map<String, dynamic>> products = const [
     {
       'title': 'Kinal',
-      'image': 'https://via.placeholder.com/100x100.png?text=Kinal',
+      'image': 'https://ppmpharma.com/cdn/shop/products/KINAL-IBU-GEL-Etui-BT-10x10.png?v=1652860771',
       'price': '\$5.00',
       'description': 'Kinal is used for treating fever and mild pain relief.',
     },
     {
-      'title': 'Paracetamol',
-      'image': 'https://via.placeholder.com/100x100.png?text=Paracetamol',
+      'title': 'Panadol',
+      'image': 'https://tovpet.com/cdn/shop/files/1649301786_8794_1-removebg-preview.png?v=1687166350',
       'price': '\$3.50',
       'description': 'Paracetamol helps to reduce fever and relieve headaches.',
     },
     {
-      'title': 'Alexan',
-      'image': 'https://via.placeholder.com/100x100.png?text=Alexan',
+      'title': 'Decoxan',
+      'image': 'https://tovpet.com/cdn/shop/files/DECOLGEN_FORTE_5x20tab_box-removebg-preview.png?v=1682675623',
       'price': '\$4.00',
       'description': 'Alexan is a medicine used for treating infections.',
     },
     {
       'title': 'Doliprane',
-      'image': 'https://via.placeholder.com/100x100.png?text=Doliprane',
+      'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVFaL0bBiia8hg239LPKNFrzZu9tQ3CZm1Uw&s',
       'price': '\$6.00',
       'description': 'Doliprane is used for managing fever and body pain.',
     },
