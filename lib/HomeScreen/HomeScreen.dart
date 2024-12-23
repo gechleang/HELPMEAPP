@@ -1,227 +1,141 @@
 import 'package:flutter/material.dart';
+import 'total_order_screen.dart';
+import 'detail_screen.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    home: HomeScreen(),
-  ));
-}
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  // Product list with title, image URL, and price
-  final List<Map<String, dynamic>> products = const [
-    {
-      'title': 'Kinal',
-      'image': 'https://ppmpharma.com/cdn/shop/products/KINAL-IBU-GEL-Etui-BT-10x10.png?v=1652860771',
-      'price': '\$5.00',
-      'description': 'Kinal is used for treating fever and mild pain relief.',
-    },
-    {
-      'title': 'Panadol',
-      'image': 'https://tovpet.com/cdn/shop/files/1649301786_8794_1-removebg-preview.png?v=1687166350',
-      'price': '\$3.50',
-      'description': 'Paracetamol helps to reduce fever and relieve headaches.',
-    },
-    {
-      'title': 'Decoxan',
-      'image': 'https://tovpet.com/cdn/shop/files/DECOLGEN_FORTE_5x20tab_box-removebg-preview.png?v=1682675623',
-      'price': '\$4.00',
-      'description': 'Alexan is a medicine used for treating infections.',
-    },
-    {
-      'title': 'Doliprane',
-      'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVFaL0bBiia8hg239LPKNFrzZu9tQ3CZm1Uw&s',
-      'price': '\$6.00',
-      'description': 'Doliprane is used for managing fever and body pain.',
-    },
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<Map<String, dynamic>> products = [
+    {'title': 'Kinal', 'price': 2.5, 'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_r41N1EwwSfc7qwrvUMhh-Wa8E1XOJak2OQ&s'},
+    {'title': 'Paracetamol', 'price': 2.5, 'image': 'https://pharmacyhealth.com.au/wp-content/uploads/2021/07/Paracetamol-20-Tabs.jpg'},
+    {'title': 'Alexan', 'price': 2.5, 'image': 'https://mymedicine.com.mm/web/image/product.template/1273/image_1024?unique=1b72ac3'},
+    {'title': 'Doliprane', 'price': 2.0, 'image': 'https://tovpet.com/cdn/shop/products/C4B96421-8C27-4EA6-91D3-B3E579325920.png?v=1632809828'},
   ];
+
+  List<Map<String, dynamic>> filteredProducts = []; // List to store filtered products
+  List<Map<String, dynamic>> cart = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredProducts = products; // Initially show all products
+  }
+
+  void filterProducts(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredProducts = products; // Show all products if the search query is empty
+      } else {
+        filteredProducts = products.where((product) {
+          return product['title'].toLowerCase().contains(query.toLowerCase());
+        }).toList(); // Filter products based on the query
+      }
+    });
+  }
+
+  void addToCart(Map<String, dynamic> product) {
+    setState(() {
+      bool productExists = cart.any((item) => item['title'] == product['title']);
+      if (productExists) {
+        final existingProduct = cart.firstWhere((item) => item['title'] == product['title']);
+        existingProduct['quantity'] += 1;
+      } else {
+        cart.add({'title': product['title'], 'price': product['price'], 'image': product['image'], 'quantity': 1});
+      }
+    });
+  }
+
+  void removeFromCart(Map<String, dynamic> product) {
+    setState(() {
+      cart.removeWhere((item) => item['title'] == product['title']);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Medicines',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Medicine Shop'),
         backgroundColor: const Color(0xFF2196F3),
-        centerTitle: true,
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index]; // Get current product details
-          return GestureDetector(
-            onTap: () {
-              // Navigate to DetailScreen with current product details
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              // Navigate to TotalOrderScreen with the cart and removeFromCart function
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailScreen(product: product),
+                  builder: (context) => TotalOrderScreen(
+                    cart: cart,
+                    removeFromCart: removeFromCart,
+                  ),
                 ),
               );
             },
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56.0), // Height of the search bar
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: TextField(
+              onChanged: filterProducts, // Update filtered products on text change
+              decoration: InputDecoration(
+                hintText: 'Search for a product...',
+                fillColor: Colors.white,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                prefixIcon: const Icon(Icons.search),
               ),
-              child: Row(
-                children: [
-                  // Product Image
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      product['image'],
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
+            ),
+          ),
+        ),
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: filteredProducts.length,
+        itemBuilder: (context, index) {
+          final product = filteredProducts[index];
+          return GestureDetector(
+            onTap: () {
+              // Navigate to Detail Screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(
+                    product: product,
+                    addToCart: addToCart,
                   ),
-                  const SizedBox(width: 16),
-
-                  // Product Title and Price
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          product['title'],
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          product['price'],
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.blueGrey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
+              );
+            },
+            child: Card(
+              elevation: 3,
+              margin: const EdgeInsets.only(bottom: 16),
+              child: ListTile(
+                leading: Image.network(product['image'], width: 60, height: 60, fit: BoxFit.cover),
+                title: Text(product['title']),
+                subtitle: Text('\$${product['price']}'),
+                trailing: ElevatedButton(
+                  onPressed: () {
+                    // Add product to cart on button press
+                    addToCart(product);
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2196F3)),
+                  child: const Text('Add to Cart', style: TextStyle(color: Colors.white)),
+                ),
               ),
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-// DetailScreen - Displays detailed information about the specific product
-class DetailScreen extends StatelessWidget {
-  final Map<String, dynamic> product;
-
-  const DetailScreen({super.key, required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(product['title']),
-        backgroundColor: const Color(0xFF2196F3),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Product Image
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  product['image'],
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Product Title
-            Text(
-              product['title'],
-              style: const TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            // Product Price
-            Text(
-              'Price: ${product['price']}',
-              style: const TextStyle(
-                fontSize: 20,
-                color: Colors.blueAccent,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Product Description
-            const Text(
-              'Description:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              product['description'],
-              style: const TextStyle(fontSize: 16, height: 1.5),
-            ),
-            const Spacer(),
-
-            // Add to Cart Button
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${product['title']} added to cart'),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2196F3),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  'Add to Cart',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
       ),
     );
   }
