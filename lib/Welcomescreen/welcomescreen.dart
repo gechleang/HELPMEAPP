@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../HomeScreen/HomeScreen.dart';
+import '../HomeScreen/HomeScreen.dart'; 
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -19,24 +18,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              
               Image.network(
-                '-?s=612x612&w=0&k=20&c=VCXSKZSViMbf3eXYZ8EeUqJmuw67M13H1MehDvR3wxI=',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKI_ygPcAPRQo8X1ayBCqqp7QWK321kZrzyQ&s',
                 width: 150,
                 height: 150,
                 fit: BoxFit.cover,
               ),
               const SizedBox(height: 30),
+
+              
               RichText(
                 textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: const TextStyle(fontSize: 24, color: Colors.black),
+                text: const TextSpan(
+                  style: TextStyle(fontSize: 24, color: Colors.black),
                   children: [
-                    const TextSpan(text: 'Welcome to '),
+                    TextSpan(text: 'Welcome to '),
                     TextSpan(
                       text: 'HelpMe',
-
                       style: TextStyle(
-                        color: const Color(0xFF2196F3),
+                        color: Color(0xFF2196F3),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -44,24 +45,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-        
+
+              
               const Text(
                 'Your reliable tool for quick and accurate medicine price calculations.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, color: Colors.black54),
               ),
               const SizedBox(height: 40),
+
               
               ElevatedButton(
-                onPressed: () { 
+                onPressed: () {
+                  debugPrint("Get Start button clicked");
                   Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => const HomeScreen(), // Replace with your target screen
-  ),
-);
-
-                  
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomeScreen(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2196F3),
@@ -72,12 +74,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 child: const Text(
                   'GET START',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 20),
-
-              
             ],
           ),
         ),

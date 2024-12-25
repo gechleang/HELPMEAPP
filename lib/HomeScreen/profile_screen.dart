@@ -8,74 +8,59 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Profile and Home Example',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Home Screen')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate to the profile page
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-          },
-          child: Text('Go to Profile Page'),
+      title: 'Guest Profile Screen',
+      theme: ThemeData(
+        primaryColor: Color(0xFF007FFF), // Softer blue primary color
+        hintColor: Color(0xFF4CAF50), // Accent color for highlights
+        textTheme: TextTheme(
+          titleLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          bodyLarge: TextStyle(fontSize: 16, color: Colors.grey[600]),
         ),
       ),
+      home: GuestProfileScreen(),
     );
   }
 }
 
-class ProfilePage extends StatelessWidget {
+class GuestProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile Page'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Navigate back to the home page
-            Navigator.pop(context);
-          },
-        ),
+        title: Text('Guest Profile'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage('assets/profile.jpg'), // Add your profile image in assets folder
-            ),
-            SizedBox(height: 16),
-            Text(
-              'John Doe',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Software Engineer',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-            SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // Navigate back to the home screen
-              },
-              child: Text('Back to Home'),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 40), // Add space at the very top
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Theme.of(context).colorScheme.secondary, width: 2),
+                ),
+                child: Icon(
+                  Icons.person,
+                  size: 100,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 30),
+              Text(
+                'Guest User',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'You are currently browsing as a guest.',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

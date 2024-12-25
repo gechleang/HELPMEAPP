@@ -2,52 +2,54 @@ import 'package:flutter/material.dart';
 
 class DetailScreen extends StatelessWidget {
   final Map<String, dynamic> product;
-  final Function(Map<String, dynamic>) addToCart;
 
-  const DetailScreen(
-    {super.key,
-    required this.product, 
-    required this.addToCart}
-    );
+  const DetailScreen({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product['title']),
+        title: Text(product['name']),
         backgroundColor: const Color(0xFF2196F3),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(
-              product['image'],
-              width: double.infinity,
-              height: 250,
+              product['imageUrl'],
+              height: 200,
               fit: BoxFit.cover,
             ),
             const SizedBox(height: 16),
             Text(
-              product['title'],
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              product['name'],
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8),
-            Text('\$${product['price']}', style: const TextStyle(fontSize: 20)),
+            Text(
+              '\$${product['price'].toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.green,
+              ),
+            ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                addToCart(product);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${product['title']} added to cart!'),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2196F3)),
-              child: const Text('Add to Cart', style: TextStyle(color: Colors.white)),
+            const Text(
+              'Product Details:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'This is a placeholder description for the selected product. Add more details here as needed.',
+              style: TextStyle(fontSize: 16),
             ),
           ],
         ),

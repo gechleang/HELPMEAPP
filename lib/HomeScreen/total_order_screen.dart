@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class TotalOrderScreen extends StatelessWidget {
   final List<Map<String, dynamic>> cart;
+  final void Function(Map<String, dynamic> product) removeFromCart;
 
-  const TotalOrderScreen({super.key, required this.cart, required void Function(Map<String, dynamic> product) removeFromCart});
+  const TotalOrderScreen({
+    super.key,
+    required this.cart,
+    required this.removeFromCart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,14 +18,12 @@ class TotalOrderScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Total Order'),
-        backgroundColor: const Color(0xFF2196F3),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // List of cart items
             Expanded(
               child: ListView.builder(
                 itemCount: cart.length,
@@ -33,12 +36,18 @@ class TotalOrderScreen extends StatelessWidget {
                       leading: Image.network(item['image'], width: 60, height: 60, fit: BoxFit.cover),
                       title: Text(item['title']),
                       subtitle: Text('\$${item['price']} x ${item['quantity']}'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          removeFromCart(item);
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
                   );
                 },
               ),
             ),
-            // To Display total price
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
@@ -46,9 +55,11 @@ class TotalOrderScreen extends StatelessWidget {
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            
             ElevatedButton(
               onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Proceeding to Checkout...')),
+                );
               },
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2196F3)),
               child: const Text('Proceed to Checkout', style: TextStyle(color: Colors.white)),
