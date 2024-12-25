@@ -18,7 +18,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              
+ 
               Image.network(
                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKI_ygPcAPRQo8X1ayBCqqp7QWK321kZrzyQ&s',
                 width: 150,
@@ -27,7 +27,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               const SizedBox(height: 30),
 
-              
               RichText(
                 textAlign: TextAlign.center,
                 text: const TextSpan(
@@ -46,7 +45,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               const SizedBox(height: 10),
 
-              
               const Text(
                 'Your reliable tool for quick and accurate medicine price calculations.',
                 textAlign: TextAlign.center,

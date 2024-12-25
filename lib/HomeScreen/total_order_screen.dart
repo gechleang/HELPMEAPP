@@ -12,13 +12,14 @@ class TotalOrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate total price
-    double totalPrice = cart.fold(0, (sum, item) => sum + (item['price'] * item['quantity']));
+    
+    double totalPrice = cart.fold(
+      0.0, 
+      (sum, item) => sum + ((item['price'] ?? 0.0) * (item['quantity'] ?? 1).toDouble())
+    );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Total Order'),
-      ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -40,7 +41,9 @@ class TotalOrderScreen extends StatelessWidget {
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
                           removeFromCart(item);
-                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${item['title']} removed from cart')),
+                          );
                         },
                       ),
                     ),

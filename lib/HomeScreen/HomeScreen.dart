@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'total_order_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,7 +10,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<Map<String, dynamic>> products = [
+  int _selectedIndex = 0;
+  final List<Map<String, dynamic>> cart = [];
+  
+  final List<Map<String, dynamic>> medicine = [
     {
       'title': 'Kinal',
       'price': 2.0,
@@ -19,47 +24,78 @@ class _HomeScreenState extends State<HomeScreen> {
       'price': 2.0,
       'image': 'https://mymedicine.com.mm/web/image/product.template/1273/image_1024?unique=1b72ac3',
     },
-    {
-      'title': 'Panadol',
-      'price': 15.0,
-      'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKAsyYeLTQa7bzHhiDvtIbBkGhAhyexmklTQ&s',
-    },
+   
   ];
-
-  List<Map<String, dynamic>> cart = [];
 
   void addToCart(Map<String, dynamic> product) {
     setState(() {
-      final existingProduct = cart.firstWhere(
-        (item) => item['title'] == product['title'],
-        orElse: () => {},
-      );
-
-      if (existingProduct.isEmpty) {
-        cart.add({'title': product['title'], 'price': product['price'], 'quantity': 1, 'image': product['image']});
+      int existingIndex = cart.indexWhere((item) => item['title'] == product['title']);
+      
+      if (existingIndex != -1) {
+        
+        cart[existingIndex] = {
+          ...cart[existingIndex],
+          'quantity': (cart[existingIndex]['quantity'] ?? 1) + 1,
+        };
       } else {
-        existingProduct['quantity'] += 1;
+        
+        cart.add({
+          ...product,
+          'quantity': 1,
+        });
       }
     });
+  }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${product['title']} added to cart!')),
+  Widget _buildHomeContent() {
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.75,
+      ),
+      itemCount: medicine.length,
+      itemBuilder: (context, index) {
+        final product = medicine[index];
+        return _buildProductCard(product);
+      },
     );
   }
 
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  Widget _buildProductCard(Map<String, dynamic> product) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Image.network(
+              product['image'],
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product['title'],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('\$${product['price']}'),
+                ElevatedButton(
+                  onPressed: () => addToCart(product),
+                  child: const Text('Add to Cart'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  final List<Widget> _screens = [
-    const HomeScreen(), 
-    TotalOrderScreen(cart: [], removeFromCart: (product) {}), 
-    const ProfileScreen(), 
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -87,66 +123,36 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _screens[_selectedIndex], // Display selected screen
+      body: _selectedIndex == 0 
+          ? _buildHomeContent()
+          : _selectedIndex == 1 
+              ? TotalOrderScreen(cart: cart, removeFromCart: (product) {
+                  setState(() {
+                    cart.remove(product);
+                  });
+                })
+              : const ProfileScreen(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_shopping_cart),
-            label: 'Add to Cart',
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class TotalOrderScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> cart;
-  final Function(Map<String, dynamic>) removeFromCart;
-
-  const TotalOrderScreen({super.key, required this.cart, required this.removeFromCart});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Cart')),
-      body: ListView.builder(
-        itemCount: cart.length,
-        itemBuilder: (context, index) {
-          final product = cart[index];
-          return ListTile(
-            title: Text(product['title']),
-            subtitle: Text('Price: \$${product['price']} x${product['quantity']}'),
-            trailing: IconButton(
-              icon: const Icon(Icons.remove_circle),
-              onPressed: () => removeFromCart(product),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: Center(
-        child: const Text('User Profile Screen'),
       ),
     );
   }

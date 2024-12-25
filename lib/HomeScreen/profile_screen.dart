@@ -10,31 +10,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Guest Profile Screen',
       theme: ThemeData(
-        primaryColor: Color(0xFF007FFF), // Softer blue primary color
-        hintColor: Color(0xFF4CAF50), // Accent color for highlights
+        primaryColor: Color(0xFF007FFF), 
+        hintColor: Color(0xFF4CAF50), 
         textTheme: TextTheme(
           titleLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           bodyLarge: TextStyle(fontSize: 16, color: Colors.grey[600]),
         ),
       ),
-      home: GuestProfileScreen(),
+      home: ProfileScreen(),
     );
   }
 }
 
-class GuestProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Guest Profile'),
-      ),
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: Column(
             children: <Widget>[
-              SizedBox(height: 40), // Add space at the very top
+              const SizedBox(height: 40),
               Container(
                 width: 120,
                 height: 120,
@@ -42,18 +42,18 @@ class GuestProfileScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: Theme.of(context).colorScheme.secondary, width: 2),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.person,
                   size: 100,
-                  color: Colors.white,
+                  color: Colors.grey,
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Text(
                 'Guest User',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 'You are currently browsing as a guest.',
                 style: Theme.of(context).textTheme.bodyLarge,

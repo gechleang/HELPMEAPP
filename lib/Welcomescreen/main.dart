@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:helpmeapp/Welcomescreen/welcomescreen.dart';
+import 'Welcomescreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,3 +20,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+ 
+ 
